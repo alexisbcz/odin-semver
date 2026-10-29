@@ -185,6 +185,15 @@ test_range_build_metadata_is_ignored :: proc(t: ^testing.T) {
 }
 
 @(test)
+test_range_to_string_drops_build_metadata :: proc(t: ^testing.T) {
+	// node-semver prints comparators without build metadata.
+	expect_desugar(t, "^1.2.3+build", ">=1.2.3 <2.0.0-0")
+	expect_desugar(t, "=1.2.3+other", "1.2.3")
+	expect_desugar(t, "1.2.3-pre+asdf - 2.4.3-pre+asdf", ">=1.2.3-pre <=2.4.3-pre")
+	expect_desugar(t, ">1.2.3+b <2.0.0+c.d || ~1.0.0-rc.1+e", ">1.2.3 <2.0.0 || >=1.0.0-rc.1 <1.1.0-0")
+}
+
+@(test)
 test_range_prerelease_needs_same_tuple :: proc(t: ^testing.T) {
 	expect_match(t, "1.2.3-alpha.7", ">1.2.3-alpha.3", true)
 	expect_match(t, "1.2.3-alpha.2", ">1.2.3-alpha.3", false)

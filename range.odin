@@ -238,6 +238,8 @@ max_satisfying_string :: proc(versions: []string, range_text: string, allocator 
 /*
 write_range appends the desugared form of `r` to `b`, for example
 `>=1.2.3 <2.0.0-0 || >=3.0.0`. An Equal comparator prints as the bare version.
+Build metadata is left out because it never affects matching, so the output
+matches node-semver.
 */
 write_range :: proc(b: ^strings.Builder, r: Range) {
 	for set, i in r.sets {
@@ -253,7 +255,7 @@ write_range :: proc(b: ^strings.Builder, r: Range) {
 	}
 }
 
-// write_comparator appends `c` to `b`, for example `>=1.2.3`.
+// write_comparator appends `c` to `b` without build metadata, for example `>=1.2.3`.
 write_comparator :: proc(b: ^strings.Builder, c: Comparator) {
 	switch c.op {
 	case .Equal:
@@ -266,7 +268,11 @@ write_comparator :: proc(b: ^strings.Builder, c: Comparator) {
 	case .Greater_Equal:
 		strings.write_string(b, ">=")
 	}
-	write_version(b, c.version)
+	// Build metadata never affects matching, so print the bound without it,
+	// as node-semver does.
+	bound := c.version
+	bound.build = ""
+	write_version(b, bound)
 }
 
 /*
