@@ -391,6 +391,18 @@ test_compare_with_build_breaks_ties :: proc(t: ^testing.T) {
 }
 
 @(test)
+test_compare_with_build_orders_numerically_equal_builds :: proc(t: ^testing.T) {
+	// `01` and `1` have the same numeric value but are different metadata,
+	// so a total order must still tell them apart.
+	b01 := semver.Version{major = 1, build = "01"}
+	b1 := semver.Version{major = 1, build = "1"}
+	testing.expect_value(t, semver.compare_with_build(b01, b1), -1)
+	testing.expect_value(t, semver.compare_with_build(b1, b01), 1)
+	testing.expect_value(t, semver.compare_with_build(b1, b1), 0)
+	testing.expect_value(t, semver.compare_with_build(b1, {major = 1, build = "2"}), -1)
+}
+
+@(test)
 test_sort_orders_by_precedence_then_build :: proc(t: ^testing.T) {
 	versions := []semver.Version{
 		{major = 2},

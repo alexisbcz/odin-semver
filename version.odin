@@ -160,7 +160,8 @@ compare :: proc(a, b: Version) -> int {
 /*
 compare_with_build orders versions like compare, then breaks ties on build
 metadata: no build ranks first, then identifiers compare the same way
-prerelease identifiers do. The Semantic Versioning specification gives build
+prerelease identifiers do, and builds that still tie, such as `01` and `1`,
+fall back to byte order. Only identical versions compare equal. The Semantic Versioning specification gives build
 metadata no precedence, so use this only for stable sorting and deduplication.
 */
 compare_with_build :: proc(a, b: Version) -> int {
@@ -175,7 +176,12 @@ compare_with_build :: proc(a, b: Version) -> int {
 	case b.build == "":
 		return 1
 	}
-	return compare_identifiers(a.build, b.build)
+	if c := compare_identifiers(a.build, b.build); c != 0 {
+		return c
+	}
+	// Numeric identifiers such as `01` and `1` have equal value but are
+	// different metadata; fall back to the raw text to keep the order total.
+	return strings.compare(a.build, b.build)
 }
 
 // less reports whether `a` has lower precedence than `b`.
