@@ -82,3 +82,4 @@ Cargo
 [Cc]omparator(s)?
 semver_tests
 [Ww]ildcard(s)?
+[Dd]esugar(s|ed|ing)?

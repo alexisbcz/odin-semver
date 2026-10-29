@@ -8,7 +8,7 @@ Run the same checks as CI:
 
 ```sh
 odin check . -vet -strict-style -disallow-do -no-entry-point
-odin test tests -vet -strict-style -disallow-do
+odin test tests -vet -strict-style -disallow-do -define:ODIN_TEST_FAIL_ON_BAD_MEMORY=true
 vale sync && vale *.md
 ```
 
