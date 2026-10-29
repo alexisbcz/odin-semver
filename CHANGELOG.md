@@ -6,6 +6,13 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ## [Unreleased]
 
+## [0.1.1] - 2026-10-29
+
+### Fixed
+
+- `compare_with_build` and `sort` now give a total order when build identifiers are equal in value but differ in text, such as `+01` and `+1`. Before, those compared equal.
+- `range_to_string` and `write_range` now leave out build metadata, as node-semver does, so `^1.2.3+build` prints `>=1.2.3 <2.0.0-0`.
+
 ## [0.1.0] - 2026-10-29
 
 ### Added
@@ -19,5 +26,6 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 - `range_to_string` and `write_range` to print the desugared comparators.
 - The `include_prerelease` option of `parse_range`.
 
-[Unreleased]: https://github.com/alexisbcz/odin-semver/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/alexisbcz/odin-semver/compare/v0.1.1...HEAD
+[0.1.1]: https://github.com/alexisbcz/odin-semver/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/alexisbcz/odin-semver/releases/tag/v0.1.0
